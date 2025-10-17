@@ -1,4 +1,4 @@
-# Archivo 28/43: app/schemas/user_schema.py
+# Archivo 28/43: app/schemas/user_schema.py - VERSIÓN CORREGIDA ✅
 # Descripción: Schemas Pydantic para validación de usuarios
 # Funcionalidad: Validación de entrada, actualización y respuesta de usuarios
 
@@ -11,7 +11,7 @@ class UserCreate(BaseSchema):
     """Schema para crear usuario"""
     nombre: str = Field(..., min_length=2, max_length=100, description="Nombre completo del usuario")
     email: EmailStr = Field(..., description="Email único para login")
-    password: str = Field(..., min_length=6, max_length=100, description="Contraseña del usuario")
+    password: str = Field(..., min_length=6, max_length=72, description="Contraseña del usuario")  # ✅ CORREGIDO: max_length=72
 
 
 class UserUpdate(BaseSchema):
