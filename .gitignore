@@ -1,0 +1,84 @@
+# ============================================
+# PYTHON / BACKEND
+# ============================================
+# Variables de entorno (CRÍTICO - NO SUBIR)
+.env
+.env.local
+.env.*.local
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+
+# PyCharm
+.idea/
+*.iml
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Archivos de usuarios (uploads)
+backend/uploads/
+uploads/
+
+# Logs
+*.log
+logs/
+
+# ============================================
+# NODE.JS / FRONTEND
+# ============================================
+# Dependencias (CRÍTICO - 13K archivos)
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+frontend/dist/
+
+# Logs npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories
+.vscode-test/
+.DS_Store
+
+# ============================================
+# GENERAL
+# ============================================
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporales
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Archivos compilados
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Scripts de scaffolding
+crear_estructura_*.py

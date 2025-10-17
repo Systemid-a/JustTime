@@ -1,0 +1,160 @@
+Listado de rutas de carpetas para el volumen Windows
+El número de serie del volumen es CACA-BD20
+C:\PROYECTOS\PROYECTO_G\BACKEND
+¦   .env
+¦   arbol.txt
+¦   requirements.txt
+¦   
++---app
+¦   ¦   config.py
+¦   ¦   database.py
+¦   ¦   factory.py
+¦   ¦   main.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---controllers
+¦   ¦   ¦   analytics_controller.py
+¦   ¦   ¦   auth_controller.py
+¦   ¦   ¦   base_controller.py
+¦   ¦   ¦   contact_controller.py
+¦   ¦   ¦   project_controller.py
+¦   ¦   ¦   task_controller.py
+¦   ¦   ¦   template_controller.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           analytics_controller.cpython-311.pyc
+¦   ¦           auth_controller.cpython-311.pyc
+¦   ¦           base_controller.cpython-311.pyc
+¦   ¦           contact_controller.cpython-311.pyc
+¦   ¦           project_controller.cpython-311.pyc
+¦   ¦           task_controller.cpython-311.pyc
+¦   ¦           template_controller.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---models
+¦   ¦   ¦   actividad_pendiente.py
+¦   ¦   ¦   base.py
+¦   ¦   ¦   categoria_proyecto.py
+¦   ¦   ¦   configuracion.py
+¦   ¦   ¦   contacto.py
+¦   ¦   ¦   documento.py
+¦   ¦   ¦   empleado.py
+¦   ¦   ¦   empleado_proyecto.py
+¦   ¦   ¦   empleado_tarea.py
+¦   ¦   ¦   plantilla.py
+¦   ¦   ¦   proyecto.py
+¦   ¦   ¦   tarea.py
+¦   ¦   ¦   usuario.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           actividad_pendiente.cpython-311.pyc
+¦   ¦           base.cpython-311.pyc
+¦   ¦           categoria_proyecto.cpython-311.pyc
+¦   ¦           configuracion.cpython-311.pyc
+¦   ¦           contacto.cpython-311.pyc
+¦   ¦           documento.cpython-311.pyc
+¦   ¦           empleado.cpython-311.pyc
+¦   ¦           empleado_proyecto.cpython-311.pyc
+¦   ¦           empleado_tarea.cpython-311.pyc
+¦   ¦           plantilla.cpython-311.pyc
+¦   ¦           proyecto.cpython-311.pyc
+¦   ¦           tarea.cpython-311.pyc
+¦   ¦           usuario.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---routers
+¦   ¦   ¦   analytics_routes.py
+¦   ¦   ¦   auth_routes.py
+¦   ¦   ¦   contact_routes.py
+¦   ¦   ¦   project_routes.py
+¦   ¦   ¦   task_routes.py
+¦   ¦   ¦   template_routes.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           analytics_routes.cpython-311.pyc
+¦   ¦           auth_routes.cpython-311.pyc
+¦   ¦           contact_routes.cpython-311.pyc
+¦   ¦           project_routes.cpython-311.pyc
+¦   ¦           task_routes.cpython-311.pyc
+¦   ¦           template_routes.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---schemas
+¦   ¦   ¦   analytics_schema.py
+¦   ¦   ¦   base_schema.py
+¦   ¦   ¦   contact_schema.py
+¦   ¦   ¦   project_schema.py
+¦   ¦   ¦   task_schema.py
+¦   ¦   ¦   template_schema.py
+¦   ¦   ¦   user_schema.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           analytics_schema.cpython-311.pyc
+¦   ¦           base_schema.cpython-311.pyc
+¦   ¦           contact_schema.cpython-311.pyc
+¦   ¦           project_schema.cpython-311.pyc
+¦   ¦           task_schema.cpython-311.pyc
+¦   ¦           template_schema.cpython-311.pyc
+¦   ¦           user_schema.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---services
+¦   ¦   ¦   file_service.py
+¦   ¦   ¦   utility_service.py
+¦   ¦   ¦   validation_service.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           file_service.cpython-311.pyc
+¦   ¦           utility_service.cpython-311.pyc
+¦   ¦           validation_service.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---utils
+¦   ¦   ¦   constants.py
+¦   ¦   ¦   exceptions.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           constants.cpython-311.pyc
+¦   ¦           exceptions.cpython-311.pyc
+¦   ¦           __init__.cpython-311.pyc
+¦   ¦           
+¦   +---__pycache__
+¦           config.cpython-311.pyc
+¦           database.cpython-311.pyc
+¦           factory.cpython-311.pyc
+¦           main.cpython-311.pyc
+¦           __init__.cpython-311.pyc
+¦           
++---uploads
+    ¦   01203ccc-ea0e-42b5-b967-59b4f4071a6b.docx
+    ¦   13012b9e-f6ef-4dce-bee8-929350822e6f.docx
+    ¦   21d8a0ea-e2fd-4f75-8c81-6156fc813b84.docx
+    ¦   23487049-b17c-45f1-87c5-1df8885ed392.docx
+    ¦   336ed944-e3c6-4c98-bb5c-9d1d263ffa12.docx
+    ¦   38aa38dc-167c-4d97-9b53-973453a2fd3e.docx
+    ¦   3d089285-2219-4a58-9fbe-17ecaa39cb90.docx
+    ¦   5ceb79e2-312b-4860-b1a8-f2ea8e852afe.docx
+    ¦   62a229a9-a8e1-4396-adb7-7b3088b1e7c3.docx
+    ¦   6580a8f0-dcb8-4e9a-891a-0945a702b07c.docx
+    ¦   65b14f02-692a-4662-95c0-620b41c287f3.docx
+    ¦   7453e631-cdac-4c12-81c1-c2a0852218df.docx
+    ¦   92bd2d85-99a5-4d05-95ec-4600e8c787a8.docx
+    ¦   952645fe-25ff-4b7a-ad43-849ca87ffadf.docx
+    ¦   a1c9ea2b-bb5b-4d27-80b3-3b46f7d3dc3e.docx
+    ¦   aa7f5081-5d9a-46ec-9f5c-d726ec57e0c4.docx
+    ¦   ad4e90f4-c85d-4e97-922d-7619d12f5e71.docx
+    ¦   b2aae845-cf6b-42bd-82a5-f87df354693b.docx
+    ¦   c97def42-2765-4dd7-8320-744a808fddce.docx
+    ¦   d888ea92-42af-44c9-8565-85c5d5218fb9.docx
+    ¦   df0a1937-a7cf-4b02-bbd7-4a169734f474.docx
+    ¦   f02ede0d-bf8f-4b3f-ada5-58dede1761db.docx
+    ¦   f04800d0-4cea-4df4-9f41-558049f32d3d.docx
+    ¦   fdd1a909-61d0-4511-9454-43d80dd3b81f.docx
+    ¦   
+    +---templates
