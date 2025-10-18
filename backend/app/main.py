@@ -16,9 +16,10 @@ from app.routers import (
     project_routes, 
     contact_routes, 
     analytics_routes,
-    template_routes  # ⭐ CAMBIAR DE plantilla_routes A template_routeslas
+    template_routes  # ⭐ Template routes para gestión de documentos Word
 )
 from app.utils.exceptions import JustTimeException
+from app.config import settings  # ✅ IMPORTAR SETTINGS PARA CORS
 from app import PROJECT_INFO
 
 
@@ -28,6 +29,11 @@ async def lifespan(app: FastAPI):
     # Startup: intentar crear tablas en base de datos
     print("🚀 Iniciando JustTime Backend...")
     await create_tables()
+    
+    # ✅ MOSTRAR CORS ORIGINS CONFIGURADOS
+    cors_origins = settings.get_cors_origins()
+    print(f"✅ CORS configurado para: {cors_origins}")
+    
     print("✅ JustTime Backend iniciado")
     yield
     # Shutdown: cleanup si es necesario
@@ -45,13 +51,17 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configuración CORS para frontend Vue.js
+# ✅ CONFIGURACIÓN CORS DINÁMICA - LEE DE VARIABLE DE ENTORNO
+cors_origins = settings.get_cors_origins()
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=cors_origins,  # ✅ AHORA ES DINÁMICO - Lee de CORS_ORIGINS en Railway
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,  # Cache preflight por 1 hora
 )
 
 
@@ -63,7 +73,9 @@ async def root():
         "message": f"🛡️ {PROJECT_INFO['name']} API funcionando correctamente",
         "version": PROJECT_INFO["version"],
         "status": "active",
-        "docs": "/docs"
+        "docs": "/docs",
+        "cors_enabled": True,
+        "allowed_origins": cors_origins  # ✅ MOSTRAR ORIGINS PERMITIDOS
     }
 
 
@@ -73,7 +85,8 @@ async def health_check():
     return {
         "status": "healthy",
         "service": PROJECT_INFO["name"],
-        "version": PROJECT_INFO["version"]
+        "version": PROJECT_INFO["version"],
+        "cors_origins": cors_origins  # ✅ Mostrar CORS configurado
     }
 
 
@@ -105,14 +118,14 @@ app.include_router(project_routes.router, prefix="/api/projects", tags=["Proyect
 app.include_router(contact_routes.router, prefix="/api/contactos", tags=["Contactos"])
 app.include_router(analytics_routes.router, prefix="/api/analytics", tags=["Analytics"])
 
-# ⭐ NUEVO: Registro de rutas de plantillas
+# ⭐ Registro de rutas de plantillas
 app.include_router(template_routes.router, prefix="/api/plantillas", tags=["Plantillas"])
 
 
 if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",
-        host="127.0.0.1",
+        host="0.0.0.0",  # ✅ Cambiar a 0.0.0.0 para Railway (acepta conexiones externas)
         port=8000,
         reload=True
     )
