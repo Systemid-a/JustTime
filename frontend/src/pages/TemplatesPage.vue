@@ -250,7 +250,7 @@
 
     <!-- ✅ MODAL DE CONFIRMACIÓN PARA ELIMINAR -->
     <Modal
-      :show="showDeleteModal"
+      :isOpen="showDeleteModal"
       title="¿Eliminar plantilla?"
       size="sm"
       @close="cancelarEliminar"

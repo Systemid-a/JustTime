@@ -245,7 +245,7 @@
     </div>
 
     <!-- Modal de Upload -->
-    <Modal :show="showUploadModal" @close="closeUploadModal" title="Subir Documento">
+    <Modal :isOpen="showUploadModal" @close="closeUploadModal" title="Subir Documento">
       <DocumentUploader 
         @uploaded="onDocumentUploaded"
         @cancel="closeUploadModal"
@@ -253,7 +253,7 @@
     </Modal>
 
     <!-- Modal de Confirmación -->
-    <Modal :show="showDeleteModal" @close="cancelarEliminar" title="Confirmar Eliminación">
+    <Modal :isOpen="showDeleteModal" @close="cancelarEliminar" title="Confirmar Eliminación">
       <div class="p-6">
         <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
           <AlertTriangle class="w-6 h-6 text-red-600" />

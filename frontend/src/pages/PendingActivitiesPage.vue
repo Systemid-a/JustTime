@@ -139,7 +139,7 @@
 
     <!-- Modal para crear/editar actividad -->
     <Modal
-      :show="showModal"
+      :isOpen="showModal"
       :title="modalTitle"
       size="lg"
       @close="closeModal"

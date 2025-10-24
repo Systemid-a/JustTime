@@ -301,7 +301,7 @@
 
     <!-- Modal para Crear/Editar Empleado Simple -->
     <Modal
-      :show="isModalOpen"
+      :isOpen="isModalOpen"
       :title="isEditMode ? 'Editar Empleado' : 'Nuevo Empleado'"
       @close="closeModal"
     >
@@ -316,7 +316,7 @@
 
     <!-- Modal para Crear Empleado Con Usuario -->
     <Modal
-      :show="isUserModalOpen"
+      :isOpen="isUserModalOpen"
       title="Nuevo Empleado con Usuario"
       size="lg"
       @close="closeUserModal"
@@ -330,7 +330,7 @@
 
     <!-- Modal de Confirmación de Eliminación -->
     <Modal
-      :show="isDeleteModalOpen"
+      :isOpen="isDeleteModalOpen"
       title="Confirmar Eliminación"
       @close="cancelDelete"
     >
