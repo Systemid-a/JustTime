@@ -202,7 +202,7 @@
 
     <!-- Modal para crear/editar tarea -->
     <Modal
-      :show="showModal"
+      :isOpen="showModal"
       :title="modalTitle"
       size="lg"
       @close="closeModal"
