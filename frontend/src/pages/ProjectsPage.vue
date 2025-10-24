@@ -166,7 +166,7 @@
     </div>
 
     <!-- Modal con Formulario -->
-    <Modal :show="showModal" :size="'lg'" @close="closeModal">
+    <Modal :isOpen="showModal" :size="'lg'" @close="closeModal">
       <ProjectForm
         :project="selectedProject"
         @save="handleSaveProject"
