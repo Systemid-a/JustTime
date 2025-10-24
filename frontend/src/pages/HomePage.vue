@@ -1,12 +1,11 @@
 <!-- ============================================================ -->
-<!-- ARCHIVO 14/31: src/pages/HomePage.vue (VERSIÓN FINAL SIN DUPLICADOS) -->
+<!-- ARCHIVO: src/pages/HomePage.vue (VERSIÓN FINAL CORREGIDA) -->
 <!-- Módulo: Pages -->
 <!-- Descripción: Dashboard principal con estadísticas reales -->
+<!-- ✅ CORREGIDO: Ahora carga actividades pendientes reales desde el backend -->
 <!-- ============================================================ -->
 
 <template>
-  <!-- ⚠️ ELIMINADO: <AppHeader /> y <AppSidebar /> porque ya están en App.vue -->
-  
   <div>
     <!-- Título -->
     <div class="mb-8">
@@ -174,48 +173,58 @@
         </div>
       </div>
 
-      <!-- Actividades Próximas -->
+      <!-- ✅ CORREGIDO: Actividades Pendientes REALES desde la API -->
       <div class="bg-white rounded-lg shadow p-6 mt-8">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">Actividades Próximas</h3>
-        <div class="space-y-3">
-          <div class="flex items-center space-x-4 p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-r">
-            <div class="bg-yellow-100 rounded-full p-2">
-              <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="font-medium text-gray-800">Llamar al cliente López</p>
-              <p class="text-sm text-gray-600">Seguimiento del caso civil</p>
-              <p class="text-xs text-gray-500 mt-1">Mañana - 10:00 AM</p>
-            </div>
-          </div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-bold text-gray-800">Actividades Próximas</h3>
+          <router-link to="/actividades-pendientes" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+            Ver todas →
+          </router-link>
+        </div>
 
-          <div class="flex items-center space-x-4 p-3 bg-blue-50 border-l-4 border-blue-500 rounded-r">
-            <div class="bg-blue-100 rounded-full p-2">
-              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        <!-- Lista de Actividades Pendientes -->
+        <div v-if="upcomingActivities.length > 0" class="space-y-3">
+          <div 
+            v-for="activity in upcomingActivities" 
+            :key="activity.id_actividad_pendiente"
+            class="flex items-center space-x-4 p-3 rounded-r border-l-4"
+            :class="getActivityClasses(activity)"
+          >
+            <div class="rounded-full p-2" :class="getActivityIconBgClass(activity)">
+              <svg class="w-5 h-5" :class="getActivityIconClass(activity)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path v-if="activity.prioridad === 'alta'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                <path v-else-if="activity.prioridad === 'media'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <div>
-              <p class="font-medium text-gray-800">Audiencia Caso García</p>
-              <p class="text-sm text-gray-600">Presentación de alegatos</p>
-              <p class="text-xs text-gray-500 mt-1">11 oct 2025 - 3:00 PM</p>
+            <div class="flex-1">
+              <p class="font-medium text-gray-800">{{ activity.descripcion }}</p>
+              <div class="flex items-center space-x-2 mt-1">
+                <span 
+                  class="inline-block text-xs px-2 py-1 rounded"
+                  :class="getPriorityClasses(activity.prioridad)"
+                >
+                  {{ activity.prioridad }}
+                </span>
+                <span v-if="activity.proyecto_nombre" class="text-xs text-gray-600">
+                  📁 {{ activity.proyecto_nombre }}
+                </span>
+                <span v-if="activity.fecha_vencimiento" class="text-xs text-gray-500">
+                  📅 {{ formatDate(activity.fecha_vencimiento) }}
+                </span>
+                <span v-else class="text-xs text-gray-400">Sin fecha</span>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div class="flex items-center space-x-4 p-3 bg-purple-50 border-l-4 border-purple-500 rounded-r">
-            <div class="bg-purple-100 rounded-full p-2">
-              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-              </svg>
-            </div>
-            <div>
-              <p class="font-medium text-gray-800">Enviar documentación</p>
-              <p class="text-sm text-gray-600">Documentos para registro mercantil</p>
-              <p class="text-xs text-gray-500 mt-1">12 oct 2025</p>
-            </div>
-          </div>
+        <!-- Empty State -->
+        <div v-else class="text-center py-8">
+          <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <p class="text-gray-500 mt-2">No hay actividades pendientes</p>
+          <p class="text-gray-400 text-sm mt-1">¡Excelente! Estás al día con tus tareas</p>
         </div>
       </div>
     </div>
@@ -226,6 +235,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import apiClient from '@/services/api'
+import documentService from '@/services/documentService'
+import pendingActivityService from '@/services/pendingActivityService'  // ✅ IMPORTADO
 
 // ============= COMPOSABLES =============
 const router = useRouter()
@@ -245,12 +256,13 @@ const stats = ref({
 // Datos
 const recentProjects = ref([])
 const pendingTasks = ref([])
+const upcomingActivities = ref([])  // ✅ NUEVO: Para actividades pendientes reales
 
 // ============= MÉTODOS =============
 
 /**
  * Cargar datos del dashboard desde las APIs
- * ✅ VERSIÓN CORREGIDA - Consume APIs reales del backend
+ * ✅ VERSIÓN CORREGIDA - Incluye actividades pendientes reales
  */
 async function fetchDashboardData() {
   loading.value = true
@@ -286,8 +298,43 @@ async function fetchDashboardData() {
     const contacts = contactsResponse.data.data || []
     stats.value.contactosRegistrados = contacts.length
     
-    // ✅ Documentos (si tienes endpoint, sino usar valor por defecto)
-    stats.value.documentosSubidos = 0
+    // ✅ CARGAR DOCUMENTOS desde API
+    try {
+      const documentsStatsResponse = await documentService.getStatistics()
+      if (documentsStatsResponse.success && documentsStatsResponse.data) {
+        stats.value.documentosSubidos = documentsStatsResponse.data.total || 0
+      } else {
+        stats.value.documentosSubidos = 0
+      }
+    } catch (docError) {
+      console.error('❌ Error al cargar estadísticas de documentos:', docError)
+      stats.value.documentosSubidos = 0
+    }
+    
+    // ✅ CARGAR ACTIVIDADES PENDIENTES REALES desde API
+    try {
+      const activitiesResponse = await pendingActivityService.getPendientes()
+      if (activitiesResponse.success && activitiesResponse.data) {
+        // Obtener las próximas 5 actividades pendientes, ordenadas por fecha de vencimiento
+        upcomingActivities.value = activitiesResponse.data
+          .sort((a, b) => {
+            // Si no tienen fecha, van al final
+            if (!a.fecha_vencimiento) return 1
+            if (!b.fecha_vencimiento) return -1
+            // Ordenar por fecha más cercana primero
+            return new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento)
+          })
+          .slice(0, 5)
+        
+        console.log('✅ Actividades pendientes cargadas:', upcomingActivities.value)
+      } else {
+        upcomingActivities.value = []
+        console.warn('⚠️ No se encontraron actividades pendientes')
+      }
+    } catch (actError) {
+      console.error('❌ Error al cargar actividades pendientes:', actError)
+      upcomingActivities.value = []
+    }
     
     console.log('✅ Datos del dashboard cargados correctamente')
     
@@ -310,6 +357,45 @@ function formatDate(dateString) {
     month: 'short', 
     year: 'numeric' 
   })
+}
+
+/**
+ * ✅ NUEVO: Obtener clases CSS según la prioridad de la actividad
+ */
+function getActivityClasses(activity) {
+  const priorityMap = {
+    'alta': 'bg-red-50 border-red-500',
+    'media': 'bg-yellow-50 border-yellow-500',
+    'baja': 'bg-blue-50 border-blue-500'
+  }
+  return priorityMap[activity.prioridad] || 'bg-gray-50 border-gray-500'
+}
+
+function getActivityIconBgClass(activity) {
+  const priorityMap = {
+    'alta': 'bg-red-100',
+    'media': 'bg-yellow-100',
+    'baja': 'bg-blue-100'
+  }
+  return priorityMap[activity.prioridad] || 'bg-gray-100'
+}
+
+function getActivityIconClass(activity) {
+  const priorityMap = {
+    'alta': 'text-red-600',
+    'media': 'text-yellow-600',
+    'baja': 'text-blue-600'
+  }
+  return priorityMap[activity.prioridad] || 'text-gray-600'
+}
+
+function getPriorityClasses(prioridad) {
+  const priorityMap = {
+    'alta': 'bg-red-100 text-red-800',
+    'media': 'bg-yellow-100 text-yellow-800',
+    'baja': 'bg-blue-100 text-blue-800'
+  }
+  return priorityMap[prioridad] || 'bg-gray-100 text-gray-800'
 }
 
 // ============= LIFECYCLE =============

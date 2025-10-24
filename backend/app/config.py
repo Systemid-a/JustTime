@@ -5,7 +5,6 @@
 import os
 from functools import lru_cache
 from pydantic_settings import BaseSettings
-from typing import List
 
 
 class Settings(BaseSettings):
@@ -24,11 +23,6 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 1440  # 24 horas
     
-    # ✅ CONFIGURACIÓN CORS - LEE DE VARIABLE DE ENTORNO
-    # En desarrollo: localhost:5173
-    # En producción Railway: se lee desde variable CORS_ORIGINS
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
-    
     # Configuración de archivos
     upload_directory: str = "uploads"
     max_file_size: int = 10 * 1024 * 1024  # 10MB
@@ -41,28 +35,6 @@ class Settings(BaseSettings):
         env_file = ".env"
         case_sensitive = False
         extra = "ignore"  # Ignorar campos extra del .env
-    
-    def get_cors_origins(self) -> List[str]:
-        """
-        Parsear CORS_ORIGINS desde variable de entorno.
-        Soporta: string separado por comas o lista JSON.
-        
-        Ejemplos:
-        - "http://localhost:5173,http://127.0.0.1:5173"
-        - "https://content-happiness-production.up.railway.app"
-        """
-        if not self.cors_origins:
-            return ["http://localhost:5173"]
-        
-        # Si viene como string separado por comas
-        if isinstance(self.cors_origins, str):
-            # Limpiar espacios y separar por comas
-            origins = [origin.strip() for origin in self.cors_origins.split(",")]
-            # Remover strings vacíos
-            return [o for o in origins if o]
-        
-        # Si ya es una lista (fallback)
-        return self.cors_origins
 
 
 @lru_cache()

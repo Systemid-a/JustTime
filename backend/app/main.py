@@ -1,7 +1,7 @@
-# Archivo 02/43: app/main.py - ACTUALIZADO CON PLANTILLAS
+# Archivo 02/43: app/main.py - ACTUALIZADO CON EMPLEADOS
 # Descripción: Aplicación principal FastAPI con configuración completa
 # Funcionalidad: Servidor ASGI, CORS, rutas y documentación automática
-# ⭐ AGREGADO: Ruta de plantillas para gestión de documentos Word
+# ⭐ AGREGADO: Ruta de empleados
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,10 +16,13 @@ from app.routers import (
     project_routes, 
     contact_routes, 
     analytics_routes,
-    template_routes  # ⭐ Template routes para gestión de documentos Word
+    template_routes,
+    document_routes,  # ⭐ NUEVO: Rutas de documentos
+    pending_activity_routes,
+    configuracion_routes,
+    employee_routes
 )
 from app.utils.exceptions import JustTimeException
-from app.config import settings  # ✅ IMPORTAR SETTINGS PARA CORS
 from app import PROJECT_INFO
 
 
@@ -29,11 +32,6 @@ async def lifespan(app: FastAPI):
     # Startup: intentar crear tablas en base de datos
     print("🚀 Iniciando JustTime Backend...")
     await create_tables()
-    
-    # ✅ MOSTRAR CORS ORIGINS CONFIGURADOS
-    cors_origins = settings.get_cors_origins()
-    print(f"✅ CORS configurado para: {cors_origins}")
-    
     print("✅ JustTime Backend iniciado")
     yield
     # Shutdown: cleanup si es necesario
@@ -51,17 +49,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# ✅ CONFIGURACIÓN CORS DINÁMICA - LEE DE VARIABLE DE ENTORNO
-cors_origins = settings.get_cors_origins()
-
+# Configuración CORS para frontend Vue.js
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=cors_origins,  # ✅ AHORA ES DINÁMICO - Lee de CORS_ORIGINS en Railway
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
-    expose_headers=["*"],
-    max_age=3600,  # Cache preflight por 1 hora
 )
 
 
@@ -73,9 +67,7 @@ async def root():
         "message": f"🛡️ {PROJECT_INFO['name']} API funcionando correctamente",
         "version": PROJECT_INFO["version"],
         "status": "active",
-        "docs": "/docs",
-        "cors_enabled": True,
-        "allowed_origins": cors_origins  # ✅ MOSTRAR ORIGINS PERMITIDOS
+        "docs": "/docs"
     }
 
 
@@ -85,8 +77,7 @@ async def health_check():
     return {
         "status": "healthy",
         "service": PROJECT_INFO["name"],
-        "version": PROJECT_INFO["version"],
-        "cors_origins": cors_origins  # ✅ Mostrar CORS configurado
+        "version": PROJECT_INFO["version"]
     }
 
 
@@ -117,15 +108,17 @@ app.include_router(task_routes.router, prefix="/api/tasks", tags=["Tareas"])
 app.include_router(project_routes.router, prefix="/api/projects", tags=["Proyectos"])
 app.include_router(contact_routes.router, prefix="/api/contactos", tags=["Contactos"])
 app.include_router(analytics_routes.router, prefix="/api/analytics", tags=["Analytics"])
-
-# ⭐ Registro de rutas de plantillas
 app.include_router(template_routes.router, prefix="/api/plantillas", tags=["Plantillas"])
+app.include_router(document_routes.router, prefix="/api/documentos", tags=["Documentos"])  # ⭐ NUEVO
+app.include_router(pending_activity_routes.router, prefix="/api/pending-activities", tags=["Actividades Pendientes"])
+app.include_router(configuracion_routes.router, prefix="/api/configuraciones", tags=["Configuraciones"])
+app.include_router(employee_routes.router, prefix="/api/empleados", tags=["Empleados"])
 
 
 if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",
-        host="0.0.0.0",  # ✅ Cambiar a 0.0.0.0 para Railway (acepta conexiones externas)
+        host="127.0.0.1",
         port=8000,
         reload=True
     )

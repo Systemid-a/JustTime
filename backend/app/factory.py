@@ -1,7 +1,7 @@
-# Archivo 05/43: app/factory.py - ACTUALIZADO CON PLANTILLAS
+# Archivo 05/43: app/factory.py - ACTUALIZADO CON EMPLEADOS
 # Descripción: Factory Method pattern para acceso a base de datos (OBLIGATORIO para tesis)
 # Funcionalidad: Creación centralizada de servicios y repositorios
-# ⭐ AGREGADO: create_template_repository() para módulo de plantillas
+# ⭐ AGREGADO: create_empleado_repository() y create_employee_service()
 
 from abc import ABC, abstractmethod
 from typing import Type, TypeVar, Generic
@@ -62,12 +62,20 @@ class BaseRepository(RepositoryInterface[T]):
             # Usar el campo de clave primaria correcto según el modelo
             if hasattr(self.model, 'id_usuario'):
                 return self.db.query(self.model).filter(self.model.id_usuario == obj_id).first()
+            elif hasattr(self.model, 'id_empleado'):
+                return self.db.query(self.model).filter(self.model.id_empleado == obj_id).first()
             elif hasattr(self.model, 'id_proyecto'):
                 return self.db.query(self.model).filter(self.model.id_proyecto == obj_id).first()
             elif hasattr(self.model, 'id_tarea'):
                 return self.db.query(self.model).filter(self.model.id_tarea == obj_id).first()
-            elif hasattr(self.model, 'id_plantilla'):  # ⭐ NUEVO: Soporte para plantillas
+            elif hasattr(self.model, 'id_plantilla'):
                 return self.db.query(self.model).filter(self.model.id_plantilla == obj_id).first()
+            elif hasattr(self.model, 'id_documento'):
+                return self.db.query(self.model).filter(self.model.id_documento == obj_id).first()
+            elif hasattr(self.model, 'id_actividad_pendiente'):
+                return self.db.query(self.model).filter(self.model.id_actividad_pendiente == obj_id).first()
+            elif hasattr(self.model, 'id_configuracion'):
+                return self.db.query(self.model).filter(self.model.id_configuracion == obj_id).first()
             else:
                 # Fallback genérico
                 return self.db.query(self.model).filter(self.model.id == obj_id).first()
@@ -141,6 +149,12 @@ class RepositoryFactory:
         return RepositoryFactory.create_repository(Usuario, db)
     
     @staticmethod
+    def create_empleado_repository(db: Session = None):
+        """Factory específico para repositorio de empleados"""
+        from app.models.empleado import Empleado
+        return RepositoryFactory.create_repository(Empleado, db)
+    
+    @staticmethod
     def create_project_repository(db: Session = None):
         """Factory específico para repositorio de proyectos"""
         from app.models.proyecto import Proyecto
@@ -158,12 +172,29 @@ class RepositoryFactory:
         from app.models.contacto import Contacto
         return RepositoryFactory.create_repository(Contacto, db)
     
-    # ⭐ NUEVO: Factory para plantillas
     @staticmethod
     def create_template_repository(db: Session = None):
         """Factory específico para repositorio de plantillas"""
         from app.models.plantilla import Plantilla
         return RepositoryFactory.create_repository(Plantilla, db)
+    
+    @staticmethod
+    def create_document_repository(db: Session = None):
+        """Factory específico para repositorio de documentos"""
+        from app.models.documento import Documento
+        return RepositoryFactory.create_repository(Documento, db)
+    
+    @staticmethod
+    def create_pending_activity_repository(db: Session = None):
+        """Factory específico para repositorio de actividades pendientes"""
+        from app.models.actividad_pendiente import ActividadPendiente
+        return RepositoryFactory.create_repository(ActividadPendiente, db)
+    
+    @staticmethod
+    def create_configuracion_repository(db: Session = None):
+        """Factory específico para repositorio de configuraciones"""
+        from app.models.configuracion import Configuracion
+        return RepositoryFactory.create_repository(Configuracion, db)
 
 
 class ServiceFactory:
@@ -175,6 +206,13 @@ class ServiceFactory:
         from app.controllers.auth_controller import AuthController
         user_repo = RepositoryFactory.create_user_repository(db)
         return AuthController(user_repo)
+    
+    @staticmethod
+    def create_employee_service(db: Session = None):
+        """Factory para servicio de empleados"""
+        from app.controllers.employee_controller import EmpleadoController
+        empleado_repo = RepositoryFactory.create_empleado_repository(db)
+        return EmpleadoController(empleado_repo)
     
     @staticmethod
     def create_project_service(db: Session = None):
@@ -190,7 +228,6 @@ class ServiceFactory:
         task_repo = RepositoryFactory.create_task_repository(db)
         return TaskController(task_repo)
     
-    # ⭐ NUEVO: Factory para servicio de plantillas
     @staticmethod
     def create_template_service(db: Session = None):
         """Factory para servicio de plantillas"""
@@ -199,6 +236,29 @@ class ServiceFactory:
         template_repo = RepositoryFactory.create_template_repository(db)
         file_service = FileService()
         return TemplateController(template_repo, file_service)
+    
+    @staticmethod
+    def create_document_service(db: Session = None):
+        """Factory para servicio de documentos"""
+        from app.controllers.document_controller import DocumentController
+        from app.services.file_service import FileService
+        document_repo = RepositoryFactory.create_document_repository(db)
+        file_service = FileService()
+        return DocumentController(document_repo, file_service)
+    
+    @staticmethod
+    def create_pending_activity_service(db: Session = None):
+        """Factory para servicio de actividades pendientes"""
+        from app.controllers.pending_activity_controller import PendingActivityController
+        pending_activity_repo = RepositoryFactory.create_pending_activity_repository(db)
+        return PendingActivityController(pending_activity_repo)
+    
+    @staticmethod
+    def create_configuracion_service(db: Session = None):
+        """Factory para servicio de configuraciones"""
+        from app.controllers.configuracion_controller import ConfiguracionController
+        configuracion_repo = RepositoryFactory.create_configuracion_repository(db)
+        return ConfiguracionController(configuracion_repo)
 
 
 # Instancia global de factories para uso en la aplicación

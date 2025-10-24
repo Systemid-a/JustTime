@@ -5,6 +5,7 @@
 // ⭐ AGREGADO: Ruta de analytics para reportes y estadísticas
 // ============================================================
 
+
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 
@@ -86,7 +87,7 @@ const routes = [
       title: 'Documentos - JustTime'
     }
   },
-  // ⭐ NUEVO: Ruta de Analytics/Reportes
+  // Ruta de Analytics/Reportes
   {
     path: '/analisis',
     name: 'Analisis',
@@ -99,7 +100,7 @@ const routes = [
   {
     path: '/actividades-pendientes',
     name: 'ActividadesPendientes',
-    component: () => import('@/pages/DocumentsPage.vue'), // Temporal
+    component: () => import('@/pages/PendingActivitiesPage.vue'), 
     meta: {
       requiresAuth: true,
       title: 'Actividades Pendientes - JustTime'
@@ -108,30 +109,33 @@ const routes = [
   {
     path: '/plantillas',
     name: 'Plantillas',
-    component: () => import('@/pages/TemplatesPage.vue'), // Temporal
+    component: () => import('@/pages/TemplatesPage.vue'), 
     meta: {
       requiresAuth: true,
       title: 'Plantillas - JustTime'
     }
   },
+  // ⭐ NUEVO: Ruta de Empleados
   {
     path: '/empleados',
     name: 'Empleados',
-    component: () => import('@/pages/DocumentsPage.vue'), // Temporal
+    component: () => import('@/pages/EmployeesPage.vue'),
     meta: {
       requiresAuth: true,
+      requiresAdmin: false, // Cambiar a true si solo admins pueden acceder
       title: 'Empleados - JustTime'
     }
   },
   {
     path: '/configuracion',
     name: 'Configuracion',
-    component: () => import('@/pages/DocumentsPage.vue'), // Temporal
+    component: () => import('@/pages/ConfigurationPage.vue'),
     meta: {
       requiresAuth: true,
       title: 'Configuración - JustTime'
     }
   },
+  
   // Ruta 404 - No encontrado
   {
     path: '/:pathMatch(.*)*',
@@ -157,11 +161,22 @@ router.beforeEach(async (to, from, next) => {
   
   // Verificar si la ruta requiere autenticación
   const requiresAuth = to.meta.requiresAuth
+  const requiresAdmin = to.meta.requiresAdmin
   
   if (requiresAuth) {
     // Ruta protegida: verificar autenticación
     if (authStore.isAuthenticated) {
-      // Usuario autenticado, permitir acceso
+      // Usuario autenticado
+      
+      // ⭐ NUEVO: Verificar si requiere permisos de administrador
+      if (requiresAdmin && !authStore.isAdmin) {
+        // Usuario no es admin, redirigir al dashboard
+        console.warn('Acceso denegado: se requieren permisos de administrador')
+        next('/dashboard')
+        return
+      }
+      
+      // Permitir acceso
       next()
     } else {
       // Usuario no autenticado, verificar si hay token en localStorage
@@ -171,6 +186,14 @@ router.beforeEach(async (to, from, next) => {
         // Hay token, intentar obtener datos del usuario
         try {
           await authStore.fetchCurrentUser()
+          
+          // ⭐ NUEVO: Verificar permisos después de cargar usuario
+          if (requiresAdmin && !authStore.isAdmin) {
+            console.warn('Acceso denegado: se requieren permisos de administrador')
+            next('/dashboard')
+            return
+          }
+          
           next()
         } catch (error) {
           // Token inválido o error, redirigir al login
@@ -194,4 +217,4 @@ router.beforeEach(async (to, from, next) => {
 })
 
 // ============= EXPORTAR ROUTER =============
-export default router
+export default router 

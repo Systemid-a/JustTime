@@ -1,7 +1,9 @@
 <!-- ============================================================ -->
-<!-- ARCHIVO 1/31: src/components/layout/AppHeader.vue -->
+<!-- ARCHIVO 1/31: src/components/layout/AppHeader.vue - VERSIÓN FINAL ✅ -->
 <!-- Módulo: Layout -->
-<!-- Descripción: Header principal con información del usuario -->
+<!-- Descripción: Header principal con badge de ROL mejorado -->
+<!-- ✅ CORREGIDO: Ahora muestra "Administrador" en lugar de "Admin" -->
+<!-- ✅ AGREGADO: Badge con colores e iconos según el rol -->
 <!-- ============================================================ -->
 
 <template>
@@ -14,10 +16,30 @@
 
     <!-- Información del usuario y logout -->
     <div class="flex items-center gap-4">
-      <!-- Nombre y rol del usuario -->
+      <!-- Nombre del usuario -->
       <div class="text-right">
         <p class="text-white font-semibold">{{ userName }}</p>
-        <p class="text-indigo-200 text-sm">{{ userRole }}</p>
+        
+        <!-- ⭐ NUEVO: Badge de rol con colores e icono -->
+        <div class="flex items-center justify-end gap-1.5 mt-1">
+          <span 
+            :class="[
+              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold',
+              isAdmin 
+                ? 'bg-purple-100 text-purple-800 border border-purple-300' 
+                : 'bg-blue-100 text-blue-800 border border-blue-300'
+            ]"
+          >
+            <!-- Icono según el rol -->
+            <component 
+              :is="isAdmin ? Crown : User" 
+              :size="12" 
+              :stroke-width="2.5"
+            />
+            <!-- ⭐ CORREGIDO: Usa userRoleName en lugar de capitalizar -->
+            <span>{{ userRoleName }}</span>
+          </span>
+        </div>
       </div>
 
       <!-- Botón de logout -->
@@ -37,32 +59,51 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import { LogOut } from 'lucide-vue-next'
+import { LogOut, Crown, User } from 'lucide-vue-next'
 
 // ============= COMPOSABLES =============
 const router = useRouter()
 const authStore = useAuthStore()
 
 // ============= COMPUTED =============
+
+/**
+ * Nombre del usuario
+ */
 const userName = computed(() => authStore.userName)
-const userRole = computed(() => {
-  // Capitalizar la primera letra del rol
-  const role = authStore.userRole
-  return role.charAt(0).toUpperCase() + role.slice(1)
-})
+
+/**
+ * ⭐ CORREGIDO: Usa userRoleName del store
+ * Retorna "Administrador" o "Usuario" (no "Admin" o "Usuario")
+ */
+const userRoleName = computed(() => authStore.userRoleName)
+
+/**
+ * Verificar si es administrador (para el icono y color)
+ */
+const isAdmin = computed(() => authStore.isAdmin)
 
 // ============= MÉTODOS =============
+
 /**
  * Cerrar sesión y redirigir al login
  */
 function handleLogout() {
   // Confirmar antes de cerrar sesión
   if (confirm('¿Estás seguro que deseas cerrar sesión?')) {
+    console.log('👋 Cerrando sesión...')
+    
     // Llamar al logout del store
     authStore.logout()
     
     // Redirigir al login
     router.push('/login')
+    
+    console.log('✅ Sesión cerrada, redirigiendo al login')
   }
 }
 </script>
+
+<style scoped>
+/* Estilos adicionales si son necesarios */
+</style>

@@ -8,7 +8,7 @@
   <!-- Overlay con backdrop-blur -->
   <Transition name="modal-fade">
     <div
-      v-if="show"
+      v-if="isOpen"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
       @click.self="handleClose"
     >
@@ -54,7 +54,7 @@ import { X } from 'lucide-vue-next'
 
 // ============= PROPS =============
 const props = defineProps({
-  show: {
+  isOpen: {
     type: Boolean,
     required: true,
     default: false
@@ -99,7 +99,7 @@ function handleClose() {
  * Manejar tecla ESC para cerrar modal
  */
 function handleEscape(event) {
-  if (event.key === 'Escape' && props.show) {
+  if (event.key === 'Escape' && props.isOpen) {
     handleClose()
   }
 }
@@ -108,7 +108,7 @@ function handleEscape(event) {
 /**
  * Bloquear scroll del body cuando modal está abierto
  */
-watch(() => props.show, (newValue) => {
+watch(() => props.isOpen, (newValue) => {
   if (newValue) {
     // Bloquear scroll
     document.body.style.overflow = 'hidden'

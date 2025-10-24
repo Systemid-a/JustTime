@@ -1,23 +1,55 @@
 // ============================================================
-// ARCHIVO: src/services/documentService.js - VERSIÓN FINAL
+// ARCHIVO: src/services/documentService.js - CORREGIDO
 // Módulo: Services
-// Descripción: Servicio para gestión de documentos
+// Descripción: Servicio para gestión de documentos (NO plantillas)
 // ============================================================
 
-import apiClient from './api' // ✅ CORREGIDO - importa de api.js
+import apiClient from './api'
 
 /**
  * Servicio de Documentos
- * Gestión completa de documentos del sistema
+ * Gestión completa de documentos del sistema (14 tipos de archivos)
  */
 const documentService = {
   
   /**
-   * Obtener todos los documentos
+   * Subir nuevo documento
+   * @param {Object} metadata - Metadatos del documento
+   * @param {File} file - Archivo a subir
+   */
+  async uploadDocument(metadata, file) {
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      
+      // Solo agregar campos que el backend de documentos espera
+      if (metadata.proyecto_id) {
+        formData.append('proyecto_id', metadata.proyecto_id)
+      }
+      
+      if (metadata.subido_por) {
+        formData.append('subido_por', metadata.subido_por)
+      }
+
+      const response = await apiClient.post('/documentos/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      
+      return response.data
+    } catch (error) {
+      console.error('Error al subir documento:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Obtener todos los documentos con filtros opcionales
    */
   async getDocuments(params = {}) {
     try {
-      const response = await apiClient.get('/documentos', { params })
+      const response = await apiClient.get('/documentos/', { params })
       return response.data
     } catch (error) {
       console.error('Error al obtener documentos:', error)
@@ -39,32 +71,42 @@ const documentService = {
   },
 
   /**
-   * Subir nuevo documento
+   * Buscar documentos por nombre
    */
-  async uploadDocument(documentData, file) {
+  async searchDocuments(query) {
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('nombre', documentData.nombre)
-      
-      if (documentData.categoria) {
-        formData.append('categoria', documentData.categoria)
-      }
-      if (documentData.descripcion) {
-        formData.append('descripcion', documentData.descripcion)
-      }
-      if (documentData.proyecto_id) {
-        formData.append('proyecto_id', documentData.proyecto_id)
-      }
-
-      const response = await apiClient.post('/documentos/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      const response = await apiClient.get('/documentos/search', {
+        params: { q: query }
       })
       return response.data
     } catch (error) {
-      console.error('Error al subir documento:', error)
+      console.error('Error al buscar documentos:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Obtener documentos de un proyecto específico
+   */
+  async getDocumentsByProject(proyectoId) {
+    try {
+      const response = await apiClient.get(`/documentos/proyecto/${proyectoId}`)
+      return response.data
+    } catch (error) {
+      console.error('Error al obtener documentos del proyecto:', error)
+      throw error
+    }
+  },
+
+  /**
+   * Obtener documentos por tipo de archivo
+   */
+  async getDocumentsByType(tipoArchivo) {
+    try {
+      const response = await apiClient.get(`/documentos/tipo/${tipoArchivo}`)
+      return response.data
+    } catch (error) {
+      console.error('Error al obtener documentos por tipo:', error)
       throw error
     }
   },
@@ -85,10 +127,10 @@ const documentService = {
   /**
    * Eliminar documento
    */
-  async deleteDocument(id, hardDelete = false) {
+  async deleteDocument(id, deleteFile = true) {
     try {
       const response = await apiClient.delete(`/documentos/${id}`, {
-        params: { hard_delete: hardDelete }
+        params: { delete_file: deleteFile }
       })
       return response.data
     } catch (error) {
@@ -131,21 +173,6 @@ const documentService = {
       return response.data
     } catch (error) {
       console.error('Error al obtener estadísticas:', error)
-      throw error
-    }
-  },
-
-  /**
-   * Buscar documentos
-   */
-  async searchDocuments(query) {
-    try {
-      const response = await apiClient.get('/documentos/search', {
-        params: { q: query }
-      })
-      return response.data
-    } catch (error) {
-      console.error('Error al buscar documentos:', error)
       throw error
     }
   }

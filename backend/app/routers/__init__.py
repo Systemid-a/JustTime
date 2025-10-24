@@ -2,7 +2,7 @@
 # Descripción: Inicialización del módulo de routers FastAPI
 # Funcionalidad: Definición de rutas API REST para el sistema
 
-from . import auth_routes, task_routes, project_routes,contact_routes, analytics_routes, template_routes
+from . import auth_routes, task_routes, project_routes,contact_routes, analytics_routes, template_routes,pending_activity_routes, configuracion_routes,employee_routes
 
 __all__ = [
     "auth_routes",
@@ -10,5 +10,8 @@ __all__ = [
     "project_routes",
     "contact_routes",
     "analytics_routes",
-    "template_routes"
+    "template_routes",
+    "pending_activity_routes",
+    "configuracion_routes",
+    "employee_routes"
 ]

@@ -1,3 +1,241 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============= VARIABLES CSS PARA MODO OSCURO ============= */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
+}
+
+.dark {
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --bg-tertiary: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --border-color: #374151;
+}
+
+/* ============= ESTILOS MODO OSCURO ============= */
+
+/* Body en modo oscuro */
+.dark body {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Todos los fondos blancos */
+.dark .bg-white {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Fondos grises claros */
+.dark .bg-gray-50 {
+  background-color: var(--bg-secondary) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Textos oscuros → claros con MEJOR CONTRASTE */
+.dark .text-gray-800,
+.dark .text-gray-900 {
+  color: #f9fafb !important; /* Blanco casi puro */
+}
+
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  color: #e5e7eb !important; /* Gris muy claro */
+}
+
+.dark .text-gray-500 {
+  color: #d1d5db !important; /* Gris claro */
+}
+
+/* CRÍTICO: Títulos y headings más visibles */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6 {
+  color: #f9fafb !important;
+}
+
+/* Labels y textos pequeños */
+.dark label,
+.dark .text-sm {
+  color: #e5e7eb !important;
+}
+
+/* Párrafos y textos normales */
+.dark p {
+  color: #d1d5db !important;
+}
+
+/* Bordes */
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: var(--border-color) !important;
+}
+
+/* Cards y sombras */
+.dark .shadow,
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-lg {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Inputs, selects, textareas */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+/* Hover states */
+.dark .hover\:bg-gray-50:hover {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #4b5563 !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: #4b5563 !important;
+}
+
+/* Modals y overlays */
+.dark .fixed.inset-0.bg-black {
+  background-color: rgba(0, 0, 0, 0.8) !important;
+}
+
+.dark .bg-opacity-50 {
+  background-opacity: 0.8 !important;
+}
+
+/* Botones azules mantienen su color pero más oscuros */
+.dark .bg-blue-600 {
+  background-color: #1e40af !important;
+}
+
+.dark .bg-blue-600:hover {
+  background-color: #1e3a8a !important;
+}
+
+.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+/* NUEVO: Texto en botones más visible */
+.dark button {
+  color: inherit;
+}
+
+.dark .text-white {
+  color: #ffffff !important;
+}
+
+/* CRÍTICO: Botones con fondo claro en modo oscuro */
+.dark button.bg-white {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+.dark button.bg-white:hover {
+  background-color: #4b5563 !important;
+}
+
+/* Badges y pills */
+.dark .bg-blue-100 {
+  background-color: #1e3a8a !important;
+  color: #93c5fd !important;
+}
+
+.dark .bg-green-100 {
+  background-color: #065f46 !important;
+  color: #6ee7b7 !important;
+}
+
+.dark .bg-yellow-100 {
+  background-color: #78350f !important;
+  color: #fcd34d !important;
+}
+
+.dark .bg-red-100 {
+  background-color: #7f1d1d !important;
+  color: #fca5a5 !important;
+}
+
+/* Tablas */
+.dark table {
+  color: var(--text-primary) !important;
+}
+
+.dark thead {
+  background-color: var(--bg-tertiary) !important;
+}
+
+.dark tbody tr:hover {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* Animaciones suaves */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ============= ESTILOS ESPECÍFICOS PARA CONFIGURACIÓN ============= */
+
+/* Cards de configuración con mejor contraste */
+.dark [class*="bg-gradient-to-r"] {
+  background: linear-gradient(to right, #1f2937, #374151) !important;
+}
+
+/* Iconos y SVG en modo oscuro */
+.dark svg {
+  color: inherit;
+}
+
+/* Dividers */
+.dark .divide-gray-200 > * {
+  border-color: #374151 !important;
+}
+
+/* Mejorar contraste en cards especiales */
+.dark .rounded-lg {
+  background-color: var(--bg-primary);
+}
+
+/* Texto en contraste con fondos de colores */
+.dark [class*="bg-blue-"],
+.dark [class*="bg-green-"],
+.dark [class*="bg-purple-"],
+.dark [class*="bg-pink-"] {
+  color: #ffffff !important;
+}
+
+/* Asegurar que TODOS los textos sean legibles */
+.dark * {
+  color: inherit;
+}
+
+.dark body * {
+  color: var(--text-primary);
+}
