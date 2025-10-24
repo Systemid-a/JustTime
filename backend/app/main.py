@@ -1,7 +1,6 @@
-# Archivo 02/43: app/main.py - ACTUALIZADO CON EMPLEADOS
-# Descripción: Aplicación principal FastAPI con configuración completa
-# Funcionalidad: Servidor ASGI, CORS, rutas y documentación automática
-# ⭐ AGREGADO: Ruta de empleados
+# Archivo 02/43: app/main.py - ACTUALIZADO CON CORS DINÁMICO
+# Descripción: Aplicación principal FastAPI con configuración CORS desde variables de entorno
+# Funcionalidad: Servidor ASGI, CORS dinámico, rutas y documentación automática
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,13 +16,14 @@ from app.routers import (
     contact_routes, 
     analytics_routes,
     template_routes,
-    document_routes,  # ⭐ NUEVO: Rutas de documentos
+    document_routes,
     pending_activity_routes,
     configuracion_routes,
     employee_routes
 )
 from app.utils.exceptions import JustTimeException
 from app import PROJECT_INFO
+from app.config import settings, CORS_CONFIG  # ⭐ IMPORTAR CORS_CONFIG
 
 
 @asynccontextmanager
@@ -31,6 +31,7 @@ async def lifespan(app: FastAPI):
     """Gestión del ciclo de vida de la aplicación"""
     # Startup: intentar crear tablas en base de datos
     print("🚀 Iniciando JustTime Backend...")
+    print(f"📡 CORS Origins configurados: {CORS_CONFIG['origins']}")  # ⭐ LOG para debug
     await create_tables()
     print("✅ JustTime Backend iniciado")
     yield
@@ -49,13 +50,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configuración CORS para frontend Vue.js
+# ⭐ CONFIGURACIÓN CORS DINÁMICA - Lee desde variables de entorno
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_origins=CORS_CONFIG["origins"],      # ✅ Usa la lista desde config.py
+    allow_credentials=CORS_CONFIG["credentials"],
+    allow_methods=CORS_CONFIG["methods"],
+    allow_headers=CORS_CONFIG["headers"],
 )
 
 
@@ -64,7 +65,7 @@ app.add_middleware(
 async def root():
     """Endpoint raíz - verificación de estado del sistema"""
     return {
-        "message": f"🛡️ {PROJECT_INFO['name']} API funcionando correctamente",
+        "message": f"⚖️ {PROJECT_INFO['name']} API funcionando correctamente",
         "version": PROJECT_INFO["version"],
         "status": "active",
         "docs": "/docs"
@@ -109,7 +110,7 @@ app.include_router(project_routes.router, prefix="/api/projects", tags=["Proyect
 app.include_router(contact_routes.router, prefix="/api/contactos", tags=["Contactos"])
 app.include_router(analytics_routes.router, prefix="/api/analytics", tags=["Analytics"])
 app.include_router(template_routes.router, prefix="/api/plantillas", tags=["Plantillas"])
-app.include_router(document_routes.router, prefix="/api/documentos", tags=["Documentos"])  # ⭐ NUEVO
+app.include_router(document_routes.router, prefix="/api/documentos", tags=["Documentos"])
 app.include_router(pending_activity_routes.router, prefix="/api/pending-activities", tags=["Actividades Pendientes"])
 app.include_router(configuracion_routes.router, prefix="/api/configuraciones", tags=["Configuraciones"])
 app.include_router(employee_routes.router, prefix="/api/empleados", tags=["Empleados"])
